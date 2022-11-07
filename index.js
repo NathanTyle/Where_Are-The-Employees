@@ -179,3 +179,46 @@ function removeEmployee() {
     console.log(6);
   }
   
+function updateEmployeeRole() {
+    db.findAllEmployees().then(([rows]) => {
+      let employees = rows;
+      const employeeChoices = employee.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id,
+      }));
+  
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "employeeId",
+            message:
+              "Oooh is someone getting promoted or demoted? Eh doesn't matter which employee's role are we updating?",
+            choice: employeeChoices,
+          },
+        ])
+        .then((res) => {
+          let employeeId = res.employeeId;
+          db.findAllRoles().then(([rows]) => {
+            let roles = rows;
+            const roleChoices = roles.map(({ id, title }) => ({
+              name: title,
+              value: id,
+            }));
+            inquirer
+              .prompt([
+                {
+                  type: "list",
+                  name: "roleId",
+                  message: "Alright boss lets assign someone a title.",
+                  choices: roleChoices,
+                },
+              ])
+              .then((res) => db.updateEmployeeRole(employeeId, res.roleId))
+              .then(() => console.log("New role assigned"))
+              .then(() => runPrompts());
+          });
+        });
+    });
+    console.log(7);
+}
