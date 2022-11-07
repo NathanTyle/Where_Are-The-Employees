@@ -120,3 +120,32 @@ function viewEmployees() {
       .then(() => runPrompts());
     console.log(3);
   }
+  
+function viewEmployeesByDepartment() {
+    db.findAllDepartments().then(([rows]) => {
+      let departments = rows;
+      const departmentChoices = departments.map(({ id, name }) => ({
+        name: name,
+        value: id,
+      }));
+  
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "departmentId",
+            message:
+              "Looking for an employee? What department are we looking at?",
+            choices: departmentChoices,
+          },
+        ])
+        .then((res) => db.findAllEmployeesByDepartment(res.departmentId))
+        .then(([rows]) => {
+          let employees = rows;
+          console.log("\n");
+          console.table(employees);
+        })
+        .then(() => runPrompts());
+    });
+    console.log(4);
+  }
