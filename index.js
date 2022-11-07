@@ -290,4 +290,15 @@ function removeRole() {
         .then(() => runPrompts());
     });
     console.log(11);
-  }
+}
+
+function viewDepartments() {
+    db.findAllDepartments()
+      .then(([rows]) => {
+        let departments = rows;
+        console.log("\n");
+        console.table(departments);
+      })
+      .then(() => runPrompts());
+    console.log(12);
+}
