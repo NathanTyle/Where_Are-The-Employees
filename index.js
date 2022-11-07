@@ -222,3 +222,14 @@ function updateEmployeeRole() {
     });
     console.log(7);
 }
+
+function viewRoles() {
+    db.findAllRoles()
+      .then(([rows]) => {
+        let roles = rows;
+        console.log("\n");
+        console.log(roles);
+      })
+      .then(() => runPrompts());
+    console.log(9);
+  }
