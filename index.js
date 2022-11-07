@@ -232,4 +232,37 @@ function viewRoles() {
       })
       .then(() => runPrompts());
     console.log(9);
+}
+
+function addRoles() {
+    db.findAllDepartments().then(([rows]) => {
+      let departments = rows;
+      const departmentChoices = departments.map(({ id, name }) => ({
+        name: name,
+        value: id,
+      }));
+      inquirer
+        .prompt([
+          {
+            name: "title",
+            message: "What's their title?",
+          },
+          {
+            name: "salary",
+            message: "How much does this title make?",
+          },
+          {
+            type: "list",
+            name: "department_id",
+            message: "What department does this title belong to?",
+            choices: departmentChoices,
+          },
+        ])
+        .then((role) => {
+          db.createRole(role)
+            .then(() => console.log(`Added ${role.title} to the databse`))
+            .then(() => runPrompts());
+        });
+    });
+    console.log(10);
   }
