@@ -265,4 +265,29 @@ function addRoles() {
         });
     });
     console.log(10);
+}
+
+function removeRole() {
+    db.findAllRoles().then(([rows]) => {
+      let roles = rows;
+      const roleChoices = roles.map(({ id, title }) => ({
+        name: title,
+        value: id,
+      }));
+  
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "roleId",
+            message:
+              "The Boss giveth and taketh away. So what role are we geting rid of? (Warning: This will also remove the employees)",
+            choices: roleChoices,
+          },
+        ])
+        .then((res) => db.removeRole(res.roleId))
+        .then(() => console.log("Goodbye role"))
+        .then(() => runPrompts());
+    });
+    console.log(11);
   }
