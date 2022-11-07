@@ -302,3 +302,20 @@ function viewDepartments() {
       .then(() => runPrompts());
     console.log(12);
 }
+
+function addDepartment() {
+    inquirer
+      .prompt([
+        {
+          name: "name",
+          message: "So we're expanding huh? What's the new department?",
+        },
+      ])
+      .then((res) => {
+        let name = res;
+        db.createDepartment(name)
+          .then(() => console.log(`Added${name.name} to the database`))
+          .then(() => runPrompts());
+      });
+    console.log(13);
+}
