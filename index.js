@@ -387,3 +387,9 @@ function addEmployee() {
       });
     console.log(16);
 }
+
+function quit() {
+    console.log("Adios Jefe!");
+    process.exit();
+  }
+  
