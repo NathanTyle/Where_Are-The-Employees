@@ -149,3 +149,33 @@ function viewEmployeesByDepartment() {
     });
     console.log(4);
   }
+
+function removeEmployee() {
+    db.findAllEmployees().then(([rows]) => {
+      let employees = rows;
+      const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id,
+      }));
+  
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "employeeId",
+            message:
+              "Letting someone go? Tough break, which one are we cutting loose Boss?",
+            choices: employeeChoices,
+          },
+        ])
+        .then((res) => db.removeEmployee(res.employeeId))
+        .then(() =>
+          console.log(
+            "Alright Boss they've been cleared from the database. The poor soul had kids!"
+          )
+        )
+        .then(() => runPrompts());
+    });
+    console.log(6);
+  }
+  
