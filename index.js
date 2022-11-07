@@ -109,3 +109,14 @@ function runPrompts() {
         }
       });
   }
+  
+function viewEmployees() {
+    db.findAllEmployees()
+      .then(([rows]) => {
+        let employees = rows;
+        console.log("\n");
+        console.table(employees);
+      })
+      .then(() => runPrompts());
+    console.log(3);
+  }
