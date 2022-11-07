@@ -22,3 +22,9 @@
   The folloing is needed to run the test: n/a
   # Questions
   If you have any questions about the repo, contact tylercharro@gmail.com
+  
+  Github link:
+  https://github.com/NathanTyle/Where_Are-The-Employees
+
+  Repo link:
+  https://nathantyle.github.io/Where_Are-The-Employees/
