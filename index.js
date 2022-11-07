@@ -182,7 +182,7 @@ function removeEmployee() {
 function updateEmployeeRole() {
     db.findAllEmployees().then(([rows]) => {
       let employees = rows;
-      const employeeChoices = employee.map(({ id, first_name, last_name }) => ({
+      const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
         name: `${first_name} ${last_name}`,
         value: id,
       }));
