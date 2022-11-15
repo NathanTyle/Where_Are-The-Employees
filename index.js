@@ -3,6 +3,7 @@ const logo = require("asciiart-logo");
 const mysql = require("mysql2");
 require("console.table");
 const db = require("./db");
+const { NULL } = require("mysql2/lib/constants/types");
 
 init();
 
@@ -12,11 +13,9 @@ function init() {
   console.log(logoText);
 
   runPrompts();
-  console.log(1);
 }
 
 function runPrompts() {
-    console.log(2);
     inquirer
       .prompt([
         {
@@ -108,7 +107,7 @@ function runPrompts() {
             quit();
         }
       });
-  }
+}
   
 function viewEmployees() {
     db.findAllEmployees()
@@ -118,8 +117,7 @@ function viewEmployees() {
         console.table(employees);
       })
       .then(() => runPrompts());
-    console.log(3);
-  }
+}
   
 function viewEmployeesByDepartment() {
     db.findAllDepartments().then(([rows]) => {
@@ -147,8 +145,7 @@ function viewEmployeesByDepartment() {
         })
         .then(() => runPrompts());
     });
-    console.log(4);
-  }
+}
 
 function removeEmployee() {
     db.findAllEmployees().then(([rows]) => {
@@ -176,8 +173,7 @@ function removeEmployee() {
         )
         .then(() => runPrompts());
     });
-    console.log(6);
-  }
+}
   
 function updateEmployeeRole() {
     db.findAllEmployees().then(([rows]) => {
@@ -195,7 +191,7 @@ function updateEmployeeRole() {
             message:
               "Oooh is someone getting promoted or demoted? Eh doesn't matter which employee's role are we updating?",
             choice: employeeChoices,
-          },
+          }
         ])
         .then((res) => {
           let employeeId = res.employeeId;
@@ -210,13 +206,13 @@ function updateEmployeeRole() {
                 {
                   type: "list",
                   name: "roleId",
-                  message: "Alright boss lets assign someone a title.",
+                  message: "Alright Boss lets assign someone a new role.",
                   choices: roleChoices,
-                },
+                }
               ])
               .then((res) => db.updateEmployeeRole(employeeId, res.roleId))
               .then(() => console.log("New role assigned"))
-              .then(() => runPrompts());
+              .then(() => runPrompts())   
           });
         });
     });
@@ -231,7 +227,6 @@ function viewRoles() {
         console.log(roles);
       })
       .then(() => runPrompts());
-    console.log(9);
 }
 
 function addRoles() {
@@ -264,7 +259,6 @@ function addRoles() {
             .then(() => runPrompts());
         });
     });
-    console.log(10);
 }
 
 function removeRole() {
@@ -289,7 +283,6 @@ function removeRole() {
         .then(() => console.log("Goodbye role"))
         .then(() => runPrompts());
     });
-    console.log(11);
 }
 
 function viewDepartments() {
@@ -300,7 +293,6 @@ function viewDepartments() {
         console.table(departments);
       })
       .then(() => runPrompts());
-    console.log(12);
 }
 
 function addDepartment() {
@@ -316,8 +308,7 @@ function addDepartment() {
         db.createDepartment(name)
           .then(() => console.log(`Added${name.name} to the database`))
           .then(() => runPrompts());
-      });
-    console.log(13);
+      }); 
 }
 
 function addEmployee() {
@@ -325,71 +316,40 @@ function addEmployee() {
       .prompt([
         {
           name: "first_name",
-          message: "Hey a new hire. What's there name?",
+          message: "Hey a new hire. What's their first name?",
         },
+        {
+          name: "last_name",
+          message:"What's their last name?"
+        },
+        {
+          type: "list",
+          name: "roleId",
+          message: "What role is the new hire filling Boss?",
+          choices: roles.map(({ id, title }) => ({
+            name: title,
+            value: id,
+          })),
+        }
       ])
       .then((res) => {
         let firstName = res.first_name;
         let lastName = res.last_name;
-  
-        db.findAllRoles().then(([rows]) => {
-          let roles = rows;
-          const roleChoices = roles.map(({ id, title }) => ({
-            name: title,
-            value: id,
-          }));
-  
-          inquirer
-            .prompt({
-              type: "list",
-              name: "roleId",
-              message: "What role is the new hire filling Boss?",
-              choices: roleChoices,
-            })
-            .then((res) => {
-              let roleId = res.roleId;
-  
-              db.findAllEmployees().then(([rows]) => {
-                let employees = rows;
-                const managerChoices = employees.map(
-                  ({ id, first_name, last_name }) => ({
-                    name: `${first_name} ${last_name}`,
-                    value: id,
-                  })
-                );
-  
-                managerChoices.unshift({ name: "None", value: null });
-  
-                inquirer
-                  .prompt({
-                    type: "list",
-                    name: "managerId",
-                    message: "Who is the new hire's manager?",
-                    choices: managerChoices,
-                  })
-                  .then((res) => {
-                    let employee = {
-                      manager_id: res.managerId,
-                      role_id: roleId,
-                      first_name: firstName,
-                      last_name: lastName,
-                    };
-  
-                    db.createEmployee(employee);
-                  })
-                  .then(() =>
-                    console.log(`Added ${firstName} ${lastName} to the database`)
-                  )
-                  .then(() => runPrompts());
-              });
-            });
-        });
+        let roleId = res.role_id;
+        let employee = {
+          role_id: roleId,
+          first_name: firstName,
+          last_name: lastName,
+        };
+
+        db.createEmployee(employee)
+        .then(() => console.log(`Added`));
+       
       });
-    console.log(16);
 }
 
 function quit() {
     console.log("Adios Jefe!");
     process.exit();
-  }
+}
   

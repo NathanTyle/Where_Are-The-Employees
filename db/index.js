@@ -19,7 +19,7 @@ class employees_DB {
   }
 
   createEmployee(employee) {
-    return this.connection.promise().query("INSERT INTO employee SET ?", employee);
+    return this.connection.promise().query(`INSERT INTO employee (first_name, last_name, role_id) VALUES (${employee.first_name}, ${employee.last_name}, ${employee.role_id})`);
   }
 
   removeEmployee(employeeId) {
@@ -66,7 +66,13 @@ class employees_DB {
       departmentId
     );
   }
-
+  
+  findAllEmployeesByManager(managerId) {
+    return this.connection.promise().query(
+      "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id WHERE manager_id = ?;",
+      managerId
+    );
+  }
 }
 console.log()
 module.exports = new employees_DB(connection);
