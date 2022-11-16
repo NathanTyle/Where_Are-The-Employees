@@ -41,7 +41,7 @@ function runPrompts() {
             },
             {
               name: "Add Employee",
-              value: " ADD_EMPLOYEE",
+              value: "ADD_EMPLOYEE",
             },
             {
               name: "Add Department",

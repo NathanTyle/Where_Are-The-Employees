@@ -19,7 +19,7 @@ class employees_DB {
   }
 
   createEmployee(employee) {
-    return this.connection.promise().query(`INSERT INTO employee (first_name, last_name, role_id) VALUES (${employee.first_name}, ${employee.last_name}, ${employee.role_id})`);
+    return this.connection.promise().query("INSERT INTO employee SET ?", employee);
   }
 
   removeEmployee(employeeId) {
